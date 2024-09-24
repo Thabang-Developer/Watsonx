@@ -1,0 +1,255 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Hubspot Ticketing",
+    "version": "v3"
+  },
+  "servers": [
+    {
+      "url": "https://api.hubapi.com",
+      "description": "Your hubspot support server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/crm/v3/objects/contacts/{email}?idProperty=email": {
+      "get": {
+        "summary": "Get Contact by email",
+        "description": "Get contact information by email",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Numeric ID of the user"
+          },
+          {
+            "in": "query",
+            "name": "properties",
+            "schema": {
+              "type": "string",
+              "default": "membership_status,createdate,email,firstname,lastname,hs_object_id,phone"
+            },
+            "required": false,
+            "description": "Comma separated list of properties to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Contact by email",
+        "description": "Update contact information by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Numeric ID of the user"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Contact not found"
+          }
+        }
+      }
+    },
+    "/crm/v3/objects/contacts": {
+      "post": {
+        "summary": "Create a new contact",
+        "description": "Create a new contact with the given properties",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContactsResponse": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "$ref": "#/components/schemas/ContactsResponseProperties"
+          }
+        }
+      },
+      "ContactsResponseProperties": {
+        "type": "object",
+        "properties": {
+          "createdate": {
+            "type": "string",
+            "description": "Date contact was added"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address"
+          },
+          "firstname": {
+            "type": "string",
+            "description": "User's first name"
+          },
+          "hs_object_id": {
+            "type": "string",
+            "description": "User's hubspot ID"
+          },
+          "lastname": {
+            "type": "string",
+            "description": "User's last name"
+          },
+          "membership_status": {
+            "type": "string",
+            "description": "Custom property - the status of user's membership, bronze silver or gold"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number"
+          }
+        }
+      },
+      "CreateContactRequest": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email address",
+                "example": "user@example.com"
+              },
+              "firstname": {
+                "type": "string",
+                "description": "User's first name",
+                "example": "John"
+              },
+              "lastname": {
+                "type": "string",
+                "description": "User's last name",
+                "example": "Doe"
+              },
+              "membership_status": {
+                "type": "string",
+                "description": "Custom property - the status of user's membership, bronze silver or gold",
+                "example": "gold"
+              },
+              "phone": {
+                "type": "string",
+                "description": "User's phone number",
+                "example": "+1234567890"
+              }
+            },
+            "required": ["email", "firstname", "lastname"]
+          }
+        }
+      },
+      "UpdateContactRequest": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email address",
+                "example": "user@example.com"
+              },
+              "firstname": {
+                "type": "string",
+                "description": "User's first name",
+                "example": "John"
+              },
+              "lastname": {
+                "type": "string",
+                "description": "User's last name",
+                "example": "Doe"
+              },
+              "membership_status": {
+                "type": "string",
+                "description": "Custom property - the status of user's membership, bronze silver or gold",
+                "example": "gold"
+              },
+              "phone": {
+                "type": "string",
+                "description": "User's phone number",
+                "example": "+1234567890"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
